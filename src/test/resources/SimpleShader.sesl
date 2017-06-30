@@ -1,0 +1,19 @@
+import sesl.Color;
+
+shader vert SimpleShader
+{
+    in vec3 position;
+
+    vec4 main()
+    {
+        return vec4(position, 1.0);
+    }
+}
+
+shader frag SimpleShader
+{
+    vec4 main()
+    {
+        return Color.RED;
+    }
+}
