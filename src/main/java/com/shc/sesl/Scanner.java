@@ -339,7 +339,14 @@ public class Scanner
                 advance();
         }
 
-        addToken(type, source.substring(start, current));
+        Object literal;
+
+        if (type == INTEGER_VALUE)
+            literal = Integer.parseInt(source.substring(start, current));
+        else
+            literal = Float.parseFloat(source.substring(start, current));
+
+        addToken(type, literal);
     }
 
     private void scanWord()

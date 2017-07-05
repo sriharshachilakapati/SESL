@@ -1,5 +1,7 @@
 package com.shc.sesl;
 
+import static com.shc.sesl.TokenType.EOF;
+
 /**
  * @author Sri Harsha Chilakapati
  */
@@ -7,15 +9,17 @@ public class SESL
 {
     private static boolean hadError = false;
 
-    public static void main(String[] args)
-    {
-        String test = "+ -1234 123.45 - /= != ! = == /* comment\nmultiline */ ++ -- // line comment\n +";
-        new Scanner(test).scanTokens().forEach(System.out::println);
-    }
-
     static void error(int line, String message)
     {
         report(line, "", message);
+    }
+
+    static void error(Token token, String message)
+    {
+        if (token.type == EOF)
+            report(token.line, " at end", message);
+        else
+            report(token.line, " at '" + token.lexeme + "'", message);
     }
 
     private static void report(int line, String where, String message)
