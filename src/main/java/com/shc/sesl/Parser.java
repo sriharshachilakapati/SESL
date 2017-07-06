@@ -12,9 +12,14 @@ public class Parser
     private final List<Token> tokens;
     private int current = 0;
 
+    private final ExprParser exprParser;
+    private final StmtParser stmtParser;
+
     public Parser(List<Token> tokens)
     {
         this.tokens = tokens;
+        this.exprParser = new ExprParser(this);
+        this.stmtParser = new StmtParser(this);
     }
 
     static ParseError error(Token token, String message)
@@ -25,7 +30,12 @@ public class Parser
 
     public Expr parseExpression()
     {
-        return new ExprParser(this).parse();
+        return exprParser.parse();
+    }
+
+    public Stmt parseStatement()
+    {
+        return stmtParser.parse();
     }
 
     Token consume(TokenType tokenType, String message)

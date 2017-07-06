@@ -7,7 +7,7 @@ import static com.shc.sesl.TokenType.*;
  */
 class ExprParser
 {
-    private Parser parser;
+    private final Parser parser;
 
     ExprParser(Parser parser)
     {
