@@ -21,11 +21,7 @@ public abstract class Expr
         @Override
         public String toString()
         {
-            return "Binary{" +
-                   "left=" + left +
-                   ", operator=" + operator +
-                   ", right=" + right +
-                   '}';
+            return String.format("( %s %s %s )", operator.lexeme, left, right);
         }
     }
 
@@ -41,9 +37,7 @@ public abstract class Expr
         @Override
         public String toString()
         {
-            return "Grouping{" +
-                   "expression=" + expression +
-                   '}';
+            return String.format("( %s )", expression);
         }
     }
 
@@ -59,9 +53,7 @@ public abstract class Expr
         @Override
         public String toString()
         {
-            return "Literal{" +
-                   "value=" + value +
-                   '}';
+            return String.format("%s", value);
         }
     }
 
@@ -79,10 +71,7 @@ public abstract class Expr
         @Override
         public String toString()
         {
-            return "Unary{" +
-                   "operator=" + operator +
-                   ", right=" + right +
-                   '}';
+            return String.format("( %s %s )", operator.lexeme, right);
         }
     }
 }
