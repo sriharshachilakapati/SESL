@@ -19,8 +19,19 @@ public class SimpleTest
                 Charset.defaultCharset());
         new Scanner(source).scanTokens().forEach(System.out::println);
 
-        source = "3 + 5 / 7";
-        Expr expr = new Parser(new Scanner(source).scanTokens()).parseExpression();
+        expression("((3 + 5) / 7 == answer) && (3 + 4 / 2 == 5)");
+        expression("a = 4");
+        expression("a++");
+        expression("++a");
+        expression("a += 64");
+        expression("3 + ++a");
+        expression("3 + a++");
+        expression("3+(++a)");
+    }
+
+    private static void expression(String expression)
+    {
+        Expr expr = new Parser(new Scanner(expression).scanTokens()).parseExpression();
         System.out.println(expr);
     }
 }

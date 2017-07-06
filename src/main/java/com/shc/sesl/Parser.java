@@ -17,14 +17,81 @@ public class Parser
         this.tokens = tokens;
     }
 
+    private static ParseError error(Token token, String message)
+    {
+        SESL.error(token, message);
+        return new ParseError();
+    }
+
     public Expr parseExpression()
     {
-        return parseEquality();
+        // expression = assignment ;
+        return parseAssignment();
+    }
+
+    private Expr parseAssignment()
+    {
+        // assignment = identifier "=" assignment
+        //            | identifier "+=" assignment
+        //            | identifier "-=" assignment
+        //            | identifier "*=" assignment
+        //            | identifier "/=" assignment
+        //            | identifier "||=" assignment
+        //            | identifier "&&=" assignment
+        //            | logic_or ;
+        Expr expr = parseOr();
+
+        if (match(EQUAL_TO, PLUS_EQUALS, MINUS_EQUALS, STAR_EQUALS,
+                SLASH_EQUALS, LOGICAL_OR_EQUALS, LOGICAL_AND_EQUALS))
+        {
+            Token operator = previous();
+            Expr value = parseAssignment();
+
+            if (expr instanceof Expr.Variable)
+            {
+                Token name = ((Expr.Variable) expr).name;
+                return new Expr.Assign(operator, name, value);
+            }
+
+            error(operator, "Invalid assignment target.");
+        }
+
+        return expr;
+    }
+
+    private Expr parseOr()
+    {
+        // logic_or = logic_and ( "||" logic_and )* ;
+        Expr expr = parseAnd();
+
+        while (match(LOGICAL_OR))
+        {
+            Token operator = previous();
+            Expr right = parseAnd();
+            expr = new Expr.Logical(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    private Expr parseAnd()
+    {
+        // logic_and = equality ( "&&" equality )* ;
+        Expr expr = parseEquality();
+
+        while (match(LOGICAL_AND))
+        {
+            Token operator = previous();
+            Expr right = parseEquality();
+            expr = new Expr.Logical(expr, operator, right);
+        }
+
+        return expr;
     }
 
     private Expr parseEquality()
     {
-        // equality → comparison ( ( "!=" | "==" ) comparison )*
+        // equality = comparison ( ( "!=" | "==" ) comparison )* ;
         Expr expr = parseComparison();
 
         while (match(NOT_EQUALS, EQUALS))
@@ -39,7 +106,7 @@ public class Parser
 
     private Expr parseComparison()
     {
-        // comparison → term ( ( ">" | ">=" | "<" | "<=" ) term )*
+        // comparison = term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
         Expr expr = parseTerm();
 
         while (match(GREATER, GREATER_EQUALS, LESSER, LESSER_EQUALS))
@@ -54,7 +121,7 @@ public class Parser
 
     private Expr parseTerm()
     {
-        // term → factor ( ( "-" | "+" ) factor )*
+        // term = factor ( ( "-" | "+" ) factor )* ;
         Expr expr = parseFactor();
 
         while (match(MINUS, PLUS))
@@ -69,7 +136,7 @@ public class Parser
 
     private Expr parseFactor()
     {
-        // factor → unary ( ( "/" | "*" ) unary )*
+        // factor = unary ( ( "/" | "*" ) unary )* ;
         Expr expr = parseUnary();
 
         while (match(SLASH, STAR))
@@ -84,13 +151,25 @@ public class Parser
 
     private Expr parseUnary()
     {
-        // unary → ( "!" | "-" ) unary
-        //       | primary
+        // pre_unary = ( "!" | "-" ) unary
+        //           | ( "++" | "--" ) identifier
+        //           | primary ;
         if (match(NOT, MINUS))
         {
             Token operator = previous();
             Expr right = parseUnary();
-            return new Expr.Unary(operator, right);
+            return new Expr.PreUnary(operator, right);
+        }
+
+        if (match(INCREMENT, DECREMENT))
+        {
+            Token operator = previous();
+            Expr right = parsePrimary();
+
+            if (right instanceof Expr.Variable)
+                return new Expr.PreUnary(operator, right);
+
+            throw error(peek(), "Expect a variable.");
         }
 
         return parsePrimary();
@@ -98,10 +177,23 @@ public class Parser
 
     private Expr parsePrimary()
     {
-        // primary → INTEGER_VALUE | FLOAT_VALUE | "false" | "true"
-        //         | "(" expression ")"
+        // primary = INTEGER_VALUE | FLOAT_VALUE | "false" | "true"
+        //         | IDENTIFIER "++"
+        //         | IDENTIFIER "--"
+        //         | IDENTIFIER
+        //         | "(" expression ")" ;
         if (match(INTEGER_VALUE, FLOAT_VALUE))
             return new Expr.Literal(previous().literal);
+
+        if (match(IDENTIFIER))
+        {
+            Expr variable = new Expr.Variable(previous());
+
+            if (match(INCREMENT, DECREMENT))
+                return new Expr.PostUnary(variable, previous());
+
+            return variable;
+        }
 
         if (match(FALSE))
             return new Expr.Literal(false);
@@ -125,12 +217,6 @@ public class Parser
             return advance();
 
         throw error(peek(), message);
-    }
-
-    private static ParseError error(Token token, String message)
-    {
-        SESL.error(token, message);
-        return new ParseError();
     }
 
     private boolean match(TokenType... types)
@@ -177,5 +263,6 @@ public class Parser
     }
 
     private static class ParseError extends RuntimeException
-    {}
+    {
+    }
 }
