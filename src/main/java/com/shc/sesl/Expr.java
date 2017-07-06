@@ -21,7 +21,7 @@ public abstract class Expr
         @Override
         public String toString()
         {
-            return String.format("( %s %s %s )", operator.lexeme, left, right);
+            return String.format("Binary ( %s %s %s )", operator.lexeme, left, right);
         }
     }
 
@@ -37,7 +37,7 @@ public abstract class Expr
         @Override
         public String toString()
         {
-            return String.format("( %s )", expression);
+            return String.format("Group ( %s )", expression);
         }
     }
 
@@ -53,7 +53,7 @@ public abstract class Expr
         @Override
         public String toString()
         {
-            return String.format("%s", value);
+            return String.format("Literal ( %s )", value);
         }
     }
 
@@ -71,7 +71,7 @@ public abstract class Expr
         @Override
         public String toString()
         {
-            return String.format("( %s %s )", operator.lexeme, right);
+            return String.format("Unary ( %s %s )", operator.lexeme, right);
         }
     }
 }
