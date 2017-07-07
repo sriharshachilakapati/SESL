@@ -81,7 +81,7 @@ public class Scanner
             scanToken();
         }
 
-        tokens.add(new Token(EOF, "", null, line));
+        tokens.add(new Token(EOF, "", null, line, 0));
         return tokens;
     }
 
@@ -220,7 +220,7 @@ public class Scanner
                 else if (isAlpha(c))
                     scanWord();
                 else
-                    SESL.error(line, "Unexpected character");
+                    SESL.error(line, start, "Unexpected character");
                 break;
         }
     }
@@ -293,7 +293,7 @@ public class Scanner
     private void addToken(TokenType tokenType, Object literal)
     {
         String text = source.substring(start, current);
-        tokens.add(new Token(tokenType, text, literal, line));
+        tokens.add(new Token(tokenType, text, literal, line, start));
     }
 
     private boolean isAtEnd()

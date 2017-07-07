@@ -142,9 +142,9 @@ class ExprParser
 
     private Expr parseUnary()
     {
-        // pre_unary = ( "!" | "-" ) unary
-        //           | ( "++" | "--" ) identifier
-        //           | primary ;
+        // unary = ( "!" | "-" ) unary
+        //       | ( "++" | "--" ) identifier
+        //       | primary ;
         if (parser.match(NOT, MINUS))
         {
             Token operator = parser.previous();

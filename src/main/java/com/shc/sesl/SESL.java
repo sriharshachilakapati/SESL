@@ -9,22 +9,22 @@ public class SESL
 {
     private static boolean hadError = false;
 
-    static void error(int line, String message)
+    static void error(int line, int column, String message)
     {
-        report(line, "", message);
+        report(line, column, "", message);
     }
 
     static void error(Token token, String message)
     {
         if (token.type == EOF)
-            report(token.line, " at end", message);
+            report(token.line, token.column," at end", message);
         else
-            report(token.line, " at '" + token.lexeme + "'", message);
+            report(token.line, token.column," at '" + token.lexeme + "'", message);
     }
 
-    private static void report(int line, String where, String message)
+    private static void report(int line, int column, String where, String message)
     {
-        System.err.println(String.format("[line %d] Error %s: %s", line, where, message));
+        System.err.println(String.format("[line %d, col %d] Error %s: %s", line, column, where, message));
         hadError = true;
     }
 }
