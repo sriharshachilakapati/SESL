@@ -58,13 +58,8 @@ public class Scanner
         keywords.put("private", PRIVATE);
         keywords.put("this", THIS);
         keywords.put("super", SUPER);
-        keywords.put("DISCARD", DISCARD);
-        keywords.put("NATIVE", NATIVE);
-        keywords.put("int", INT);
-        keywords.put("float", FLOAT);
-        keywords.put("void", VOID);
-        keywords.put("double", DOUBLE);
-        keywords.put("boolean", BOOLEAN);
+        keywords.put("discard", DISCARD);
+        keywords.put("native", NATIVE);
     }
 
     public Scanner(String source)

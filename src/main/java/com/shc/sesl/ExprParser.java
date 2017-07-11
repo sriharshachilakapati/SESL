@@ -169,28 +169,26 @@ class ExprParser
     private Expr parsePrimary()
     {
         // primary = INTEGER_VALUE | FLOAT_VALUE | "false" | "true"
-        //         | IDENTIFIER "++"
-        //         | IDENTIFIER "--"
-        //         | IDENTIFIER
+        //         | variable ( "++" | "--" )?
         //         | "(" expression ")" ;
         if (parser.match(INTEGER_VALUE, FLOAT_VALUE))
             return new Expr.Literal(parser.previous().literal);
-
-        if (parser.match(IDENTIFIER))
-        {
-            Expr variable = new Expr.Variable(parser.previous());
-
-            if (parser.match(INCREMENT, DECREMENT))
-                return new Expr.PostUnary(variable, parser.previous());
-
-            return variable;
-        }
 
         if (parser.match(FALSE))
             return new Expr.Literal(false);
 
         if (parser.match(TRUE))
             return new Expr.Literal(true);
+
+        if (parser.match(IDENTIFIER))
+        {
+            Expr variable = parseVariable();
+
+            if (parser.match(INCREMENT, DECREMENT))
+                return new Expr.PostUnary(variable, parser.previous());
+
+            return variable;
+        }
 
         if (parser.match(LEFT_PAREN))
         {
@@ -200,5 +198,21 @@ class ExprParser
         }
 
         throw Parser.error(parser.peek(), "Expect an expression.");
+    }
+
+    private Expr parseVariable()
+    {
+        // variable = IDENTIFIER ( "." IDENTIFIER )* ;
+        Expr variable = new Expr.Variable(parser.previous());
+
+        while (parser.match(DOT))
+        {
+            if (parser.match(IDENTIFIER))
+                variable = new Expr.Variable(parser.previous(), (Expr.Variable) variable);
+            else
+                throw Parser.error(parser.peek(), "Expected a variable.");
+        }
+
+        return variable;
     }
 }

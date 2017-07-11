@@ -1,6 +1,11 @@
 package com.shc.sesl;
 
 /**
+ * A small utility class to check whether a character is a digit or alphabet or maybe
+ * one of either. I could've used the standard methods of the {@link Character} class
+ * but the issue is that they also support numbers in Devanagari scripts, which isn't
+ * what we want at all.
+ *
  * @author Sri Harsha Chilakapati
  */
 class CharUtil

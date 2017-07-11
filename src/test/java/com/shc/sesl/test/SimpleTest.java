@@ -29,6 +29,8 @@ public class SimpleTest
         expression("3+(++a)");
         expression("a++ - 4");
         expression("++a + 5");
+        expression("a.b++");
+        expression("++a.b");
     }
 
     private static void expression(String expression)
