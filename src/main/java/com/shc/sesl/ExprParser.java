@@ -22,13 +22,7 @@ class ExprParser
 
     private Expr parseAssignment()
     {
-        // assignment = identifier "=" assignment
-        //            | identifier "+=" assignment
-        //            | identifier "-=" assignment
-        //            | identifier "*=" assignment
-        //            | identifier "/=" assignment
-        //            | identifier "||=" assignment
-        //            | identifier "&&=" assignment
+        // assignment = variable ( "=" | "+=" | "-=" | "*=" | "/=" | "||=" | "&&=" ) assignment
         //            | logic_or ;
         Expr expr = parseOr();
 
