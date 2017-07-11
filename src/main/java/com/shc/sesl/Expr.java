@@ -89,13 +89,13 @@ public abstract class Expr
      */
     public static class Assign extends Expr
     {
-        public final Token token;
-        public final Token operator;
-        public final Expr  value;
+        public final Variable variable;
+        public final Token    operator;
+        public final Expr     value;
 
-        public Assign(Token token, Token operator, Expr value)
+        public Assign(Variable variable, Token operator, Expr value)
         {
-            this.token = token;
+            this.variable = variable;
             this.operator = operator;
             this.value = value;
         }
@@ -103,7 +103,7 @@ public abstract class Expr
         @Override
         public String toString()
         {
-            return String.format("Assign(%s %s %s)", operator.lexeme, token.lexeme, value);
+            return String.format("Assign(%s %s %s)", operator.lexeme, variable, value);
         }
     }
 

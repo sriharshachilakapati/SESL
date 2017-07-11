@@ -31,6 +31,7 @@ public class SimpleTest
         expression("++a + 5");
         expression("a.b++");
         expression("++a.b");
+        expression("foo.bar = 45");
     }
 
     private static void expression(String expression)

@@ -39,10 +39,7 @@ class ExprParser
             Expr value = parseAssignment();
 
             if (expr instanceof Expr.Variable)
-            {
-                Token name = ((Expr.Variable) expr).name;
-                return new Expr.Assign(operator, name, value);
-            }
+                return new Expr.Assign((Expr.Variable) expr, operator, value);
 
             throw Parser.error(operator, "Invalid assignment target.");
         }
@@ -143,7 +140,7 @@ class ExprParser
     private Expr parseUnary()
     {
         // unary = ( "!" | "-" ) unary
-        //       | ( "++" | "--" ) identifier
+        //       | ( "++" | "--" ) variable
         //       | primary ;
         if (parser.match(NOT, MINUS))
         {
