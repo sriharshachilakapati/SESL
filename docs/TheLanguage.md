@@ -72,6 +72,7 @@ The complete list of preprocessor directives are as follows:
 There are also the following predefined macros for determining the target GLSL or GLSL ES version:
 
   - `GLSL_VERSION`
+  - `GLSL_CORE`
   - `GLSL_ES`
   
 These allow for us to check for the runtime GLSL version. You can use this to select any optional extensions in your shaders depending on the targets. An example will be as follows:
