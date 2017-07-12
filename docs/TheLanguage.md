@@ -83,7 +83,7 @@ These allow for us to check for the runtime GLSL version. You can use this to se
 #endif
 ~~~
 
-Additionally there is support for the `defined` operator in the preprocessor conditional. Another difference is that unlike GLSL, SESL doesn't permit you to have whitespace after the `#` symbol.
+Additionally there is support for the `defined` operator in the preprocessor conditional. Another difference is that unlike GLSL, SESL doesn't permit you to have whitespace after the `#` symbol. The preprocessor is targeted on each file in the compile path individually, and each file will gets it's own preprocessor context. So the defines you made in one file will not be available in the other, as it makes no sense to mix preprocessor directives with the imports of packages.
 
 ### 3.3. Comments
 
