@@ -21,6 +21,7 @@ public class Scanner
     private int start   = 0;
     private int current = 0;
     private int line    = 1;
+    private int lineStart = 0;
 
     static
     {
@@ -93,6 +94,7 @@ public class Scanner
 
             case '\n':
                 line++;
+                lineStart = current;
                 break;
 
             case '#':
@@ -288,7 +290,7 @@ public class Scanner
     private void addToken(TokenType tokenType, Object literal)
     {
         String text = source.substring(start, current);
-        tokens.add(new Token(tokenType, text, literal, line, start));
+        tokens.add(new Token(tokenType, text, literal, line, start - lineStart));
     }
 
     private boolean isAtEnd()
