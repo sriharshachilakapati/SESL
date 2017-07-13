@@ -63,6 +63,7 @@ SESL comes with a preprocessor, that can be used just like the GLSL preprocessor
 The complete list of preprocessor directives are as follows:
 
   - `#define`
+  - `#undef`
   - `#ifdef`
   - `#ifndef`
   - `#else`
@@ -84,6 +85,8 @@ These allow for us to check for the runtime GLSL version. You can use this to se
 ~~~
 
 Additionally there is support for the `defined` operator in the preprocessor conditional. Another difference is that unlike GLSL, SESL doesn't permit you to have whitespace after the `#` symbol. The preprocessor is targeted on each file in the compile path individually, and each file will gets it's own preprocessor context. So the defines you made in one file will not be available in the other, as it makes no sense to mix preprocessor directives with the imports of packages.
+
+Also all the preprocessor directives should be on their own line, and shouldn't be mixed with code.
 
 ### 3.3. Comments
 
