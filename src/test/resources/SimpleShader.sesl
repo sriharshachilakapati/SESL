@@ -1,19 +1,40 @@
-import sesl.Color;
+#if 3 == 2 + 1
+    shader
+    #if 5 == 2
+        frag
+    #elif 5 == 3 + 2 - 4 + 4
+        vert
+    #elif 3 == 2
+        frag
+    #else
+        32
+    #endif
 
-shader vert SimpleShader
-{
-    in vec3 position;
+    #define VALUE 3 * 4
 
-    vec4 main()
-    {
-        return vec4(position, 1.0);
-    }
-}
+    #if VALUE == 12
+        MyShader
+    #endif
 
-shader frag SimpleShader
-{
-    vec4 main()
-    {
-        return Color.RED;
-    }
-}
+    #ifndef HELLO
+        {
+            #define ATTR_NAME pos
+            in vec4 ATTR_NAME;
+
+            #define HELLO
+            #ifdef HELLO
+                vec4 main()
+                {
+            #endif
+            #undef HELLO
+            #ifndef HELLO
+                    return vec4(1.0);
+                }
+            #elif 3 == 3
+                false
+            #else
+                test
+            #endif
+        }
+    #endif
+#endif
