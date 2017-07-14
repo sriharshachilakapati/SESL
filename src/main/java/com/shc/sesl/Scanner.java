@@ -14,6 +14,7 @@ import static com.shc.sesl.TokenType.*;
 public class Scanner
 {
     private static final Map<String, TokenType> keywords = new HashMap<>();
+    private static final Map<String, TokenType> reserved = new HashMap<>();
 
     private final String      source;
     private final List<Token> tokens;
@@ -25,42 +26,100 @@ public class Scanner
 
     static
     {
-        keywords.put("true", TRUE);
-        keywords.put("false", FALSE);
-        keywords.put("const", CONST);
-        keywords.put("uniform", UNIFORM);
-        keywords.put("in", IN);
-        keywords.put("out", OUT);
-        keywords.put("pass", PASS);
+        keywords.put("package", PACKAGE);
+        keywords.put("import", IMPORT);
         keywords.put("shader", SHADER);
-        keywords.put("vert", VERT);
-        keywords.put("frag", FRAG);
-        keywords.put("extends", EXTENDS);
         keywords.put("class", CLASS);
         keywords.put("struct", STRUCT);
+        keywords.put("extends", EXTENDS);
+        keywords.put("in", IN);
+        keywords.put("pass", PASS);
+        keywords.put("out", OUT);
         keywords.put("if", IF);
         keywords.put("else", ELSE);
+        keywords.put("switch", SWITCH);
+        keywords.put("case", CASE);
+        keywords.put("default", DEFAULT);
+        keywords.put("break", BREAK);
+        keywords.put("continue", CONTINUE);
         keywords.put("do", DO);
         keywords.put("while", WHILE);
         keywords.put("for", FOR);
-        keywords.put("switch", SWITCH);
-        keywords.put("break", BREAK);
-        keywords.put("continue", CONTINUE);
-        keywords.put("default", DEFAULT);
-        keywords.put("#ifdef", PP_IFDEF);
-        keywords.put("#define", PP_DEFINE);
-        keywords.put("#endif", PP_ENDIF);
-        keywords.put("#ifndef", PP_IFNDEF);
-        keywords.put("#else", PP_ELSE);
-        keywords.put("return", RETURN);
-        keywords.put("package", PACKAGE);
-        keywords.put("import", IMPORT);
-        keywords.put("public", PUBLIC);
-        keywords.put("private", PRIVATE);
         keywords.put("this", THIS);
         keywords.put("super", SUPER);
-        keywords.put("discard", DISCARD);
         keywords.put("native", NATIVE);
+        keywords.put("operator", OPERATOR);
+        keywords.put("return", RETURN);
+        keywords.put("discard", DISCARD);
+        keywords.put("const", CONST);
+        keywords.put("uniform", UNIFORM);
+        keywords.put("vert", VERT);
+        keywords.put("frag", FRAG);
+        keywords.put("public", PUBLIC);
+        keywords.put("private", PRIVATE);
+        keywords.put("static", STATIC);
+        keywords.put("deprecated", DEPRECATED);
+
+        reserved.put("asm", ASM);
+        reserved.put("union", UNION);
+        reserved.put("enum", ENUM);
+        reserved.put("typedef", TYPEDEF);
+        reserved.put("template", TEMPLATE);
+        reserved.put("packed", PACKED);
+        reserved.put("goto", GOTO);
+        reserved.put("inline", INLINE);
+        reserved.put("noinline", NOINLINE);
+        reserved.put("volatile", VOLATILE);
+        reserved.put("extern", EXTERN);
+        reserved.put("external", EXTERNAL);
+        reserved.put("interface", INTERFACE);
+        reserved.put("long", LONG);
+        reserved.put("short", SHORT);
+        reserved.put("double", DOUBLE);
+        reserved.put("half", HALF);
+        reserved.put("fixed", FIXED);
+        reserved.put("unsigned", UNSIGNED);
+        reserved.put("input", INPUT);
+        reserved.put("output", OUTPUT);
+        reserved.put("sizeof", SIZEOF);
+        reserved.put("cast", CAST);
+        reserved.put("namespace", NAMESPACE);
+        reserved.put("using", USING);
+        reserved.put("inout", INOUT);
+        reserved.put("layout", LAYOUT);
+        reserved.put("precision", PRECISION);
+        reserved.put("attribute", ATTRIBUTE);
+        reserved.put("varying", VARYING);
+        reserved.put("lowp", LOWP);
+        reserved.put("mediump", MEDIUMP);
+        reserved.put("highp", HIGHP);
+        reserved.put("centroid", CENTROID);
+        reserved.put("invariant", INVARIANT);
+        reserved.put("flat", FLAT);
+        reserved.put("smooth", SMOOTH);
+        reserved.put("noperspective", NOPERSPECTIVE);
+        reserved.put("common", COMMON);
+        reserved.put("partition", PARTITION);
+        reserved.put("active", ACTIVE);
+        reserved.put("superp", SUPERP);
+        reserved.put("filter", FILTER);
+        reserved.put("row_major", ROW_MAJOR);
+        reserved.put("patch", PATCH);
+        reserved.put("sample", SAMPLE);
+        reserved.put("subroutine", SUBROUTINE);
+        reserved.put("uint", UINT);
+        reserved.put("tessc", TESSC);
+        reserved.put("tesse", TESSE);
+        reserved.put("geom", GEOM);
+        reserved.put("buffer", BUFFER);
+        reserved.put("shared", SHARED);
+        reserved.put("coherent", COHERENT);
+        reserved.put("restrict", RESTRICT);
+        reserved.put("readonly", READONLY);
+        reserved.put("writeonly", WRITEONLY);
+        reserved.put("precise", PRECISE);
+        reserved.put("compute", COMPUTE);
+        reserved.put("resource", RESOURCE);
     }
 
     public Scanner(String source)
@@ -95,10 +154,6 @@ public class Scanner
             case '\n':
                 line++;
                 lineStart = current;
-                break;
-
-            case '#':
-                scanWord();
                 break;
 
             case '(': addToken(LEFT_PAREN);    break;
@@ -254,7 +309,7 @@ public class Scanner
             advance();
 
         String lexeme = source.substring(start, current);
-        TokenType type = keywords.getOrDefault(lexeme, IDENTIFIER);
+        TokenType type = keywords.getOrDefault(lexeme, reserved.getOrDefault(lexeme, IDENTIFIER));
 
         addToken(type, lexeme);
     }
