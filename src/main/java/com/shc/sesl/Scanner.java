@@ -60,6 +60,9 @@ public class Scanner
         keywords.put("static", STATIC);
         keywords.put("deprecated", DEPRECATED);
 
+        keywords.put("true", TRUE);
+        keywords.put("false", FALSE);
+
         reserved.put("asm", ASM);
         reserved.put("union", UNION);
         reserved.put("enum", ENUM);
