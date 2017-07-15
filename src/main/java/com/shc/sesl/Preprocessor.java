@@ -38,7 +38,7 @@ public class Preprocessor
 
             // If there is no preprocessor directive, transform it with the context
             if (!line.contains("#"))
-                sb.append(transform(line, context)).append('\n');
+                sb.append(transform(line, context));
 
             // Define new macro, parse it and add it into the context
             else if (line.contains("#define"))
@@ -49,7 +49,6 @@ public class Preprocessor
                     error(i + 1, line.indexOf("#"), "Expected an identifier for the name of the macro.");
 
                 context.put(parts[1], parts.length == 3 ? parts[2] : "");
-                sb.append('\n');
             }
 
             // Undefine an existing macro, and remove it from the context
@@ -61,7 +60,6 @@ public class Preprocessor
                     error(i + 1, line.indexOf("#"), "Expected an identifier for the name of the macro.");
 
                 context.remove(parts[1]);
-                sb.append('\n');
             }
 
             // Conditional blocks, #ifdef and #ifndef. They just check for
@@ -79,8 +77,6 @@ public class Preprocessor
                     processSuccessBlock(lines, i);
                 else
                     processFailureBlock(lines, i);
-
-                sb.append('\n');
             }
 
             // Conditional block #if, the one which supports arithmetic expressions
@@ -113,8 +109,6 @@ public class Preprocessor
                     processSuccessBlock(lines, i);
                 else
                     processFailureBlock(lines, i);
-
-                sb.append('\n');
             }
 
             // Unexpected preprocessor directives
@@ -124,6 +118,9 @@ public class Preprocessor
             // Unknown directive at that location.
             else
                 error(i + 1, line.indexOf('#'), "Unknown preprocessor directive.");
+
+            if (i < lines.length - 1)
+                sb.append('\n');
         }
 
         return sb.toString();
@@ -216,6 +213,9 @@ public class Preprocessor
      */
     private static void processFailureBlock(String[] lines, int i)
     {
+        // Remove the preprocessor directive
+        lines[i] = "";
+
         for (int j = i; j < lines.length; j++)
         {
             // If it is a nested conditional block, remove it entirely
@@ -258,6 +258,13 @@ public class Preprocessor
                 lines[j] = lines[j].replaceAll("#elif (.+)", "#if $1")
                         .replaceAll("#else", "#if true");
 
+                return;
+            }
+
+            // If we reached an endif token, then remove it as well and return
+            if (lines[j].contains("#endif"))
+            {
+                lines[j] = "";
                 return;
             }
 
