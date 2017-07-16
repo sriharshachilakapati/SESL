@@ -5,10 +5,10 @@ package com.shc.sesl;
  */
 public class Token
 {
-    final TokenType type;
+    public final TokenType type;
 
-    final String lexeme;
-    final Object literal;
+    public final String lexeme;
+    public final Object literal;
 
     final int line;
     final int column;

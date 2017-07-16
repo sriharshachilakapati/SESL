@@ -271,7 +271,7 @@ public class Scanner
 
             default:
                 if (isDigit(c))
-                    scanNumber();
+                    scanNumber(c - '0');
                 else if (isAlpha(c))
                     scanWord();
                 else
@@ -280,12 +280,58 @@ public class Scanner
         }
     }
 
-    private void scanNumber()
+    private void scanNumber(int firstDigit)
     {
         TokenType type = INTEGER_VALUE;
 
+        if (firstDigit == 0)
+        {
+            // Hexadecimal notation! 0x[0-9A-Fa-f]+
+            if (peek() == 'x')
+            {
+                advance();
+
+                while (isDigit(peek()) || (peek() >= 'A' && peek() <= 'F') ||
+                       (peek() >= 'a' && peek() <= 'f'))
+                    advance();
+
+                addToken(INTEGER_VALUE, Integer.parseInt(source.substring(start + 2, current), 16));
+                return;
+            }
+
+            // Binary notation! 0b[01]+
+            else if (peek() == 'b')
+            {
+                advance();
+
+                while (peek() == '0' || peek() == '1')
+                    advance();
+
+                addToken(INTEGER_VALUE, Integer.parseInt(source.substring(start + 2, current), 2));
+                return;
+            }
+
+            // Octal notation! 0[0-7]+
+            else
+            {
+                advance();
+
+                while (peek() >= '0' && peek() <= '7')
+                    advance();
+
+                addToken(INTEGER_VALUE, Integer.parseInt(source.substring(start + 1, current), 8));
+                return;
+            }
+        }
+
         while (isDigit(peek()))
+        {
             advance();
+
+            // Underscores are allowed in numbers to separate
+            if (peek() == '_')
+                advance();
+        }
 
         if (peek() == '.')
         {
@@ -297,11 +343,12 @@ public class Scanner
         }
 
         Object literal;
+        String lexeme = source.substring(start, current).replaceAll("_", "");
 
         if (type == INTEGER_VALUE)
-            literal = Integer.parseInt(source.substring(start, current));
+            literal = Integer.parseInt(lexeme);
         else
-            literal = Float.parseFloat(source.substring(start, current));
+            literal = Float.parseFloat(lexeme);
 
         addToken(type, literal);
     }

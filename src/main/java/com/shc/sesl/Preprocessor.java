@@ -68,7 +68,7 @@ public class Preprocessor
                 String[] parts = line.trim().split("[\\s\\t]+", 2);
 
                 if (parts.length == 1)
-                    error(i + 1, line.indexOf("#"), "Expected an identifier for the name of macro.");
+                    error(i + 1, line.indexOf("#") + parts[0].length(), "Expected an identifier for the name of macro.");
 
                 boolean result = context.get(parts[1]) != null;
                 boolean negate = line.contains("#ifndef");
@@ -85,7 +85,7 @@ public class Preprocessor
                 String[] line2 = { line.trim().replaceAll("\\s*#if", "") };
 
                 if (line2[0].trim().isEmpty())
-                    error(i + 1, line.indexOf("#"), "Expected an expression.");
+                    error(i + 1, line.indexOf("#") + 3, "Expected an expression.");
 
                 // Transform the expression, substituting values of macros
                 context.forEach((key, value) -> line2[0] = line2[0]
@@ -205,7 +205,7 @@ public class Preprocessor
         }
 
         // If we ever reach here, that means it is an error
-        error(lines.length - 1, 0, "Expected a #endif directive");
+        error(lines.length, 0, "Expected a #endif directive");
     }
 
     /*
@@ -273,7 +273,7 @@ public class Preprocessor
         }
 
         // If we ever reach here, that means it is an error
-        error(lines.length - 1, 0, "Expected a #endif directive");
+        error(lines.length, 0, "Expected a #endif directive");
     }
 
     /*
