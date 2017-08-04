@@ -209,4 +209,23 @@ bool done = false;  // Declare done and initialize it to false
 
 The right side of the assignment operator should evaluate to a boolean expression. Similarly the expressions for conditional jumps **\( if, for, ?:, switch-case, while, do-while \)** should evaluate to a boolean value.
 
+#### 4.1.3. Integers
+
+SESL provides integer support, but doesn't support all integer operations that work in bits. This is because integer support is weak in most GPUs as they are optimized for floating point operations. At the exception of variables, array subscripts, or referencing texture units, SESL automatically replaces them with floats. When used as part of the expression, they will be implicitly converted to a float when required.
+
+~~~sesl
+int i, j = 42;
+~~~
+
+Literal integers can be expressed in base 10 (decimal), base 8 (octal), base 16 (hexadecimal) and also in base 2 (binary) notations as seen below.
+
+~~~sesl
+int a = 0xA;      // Hexadecimal
+int b = 72;       // Decimal
+int c = 07;       // Octal
+int d = 0b101101; // Binary
+~~~
+
+SESL doesn't make any guarantees on the integer overflow, as they are dependent on the hardware. However you can be fine until the integer doesn't exceed the 16-bit precision.
+
 TODO: Complete writing the spec
