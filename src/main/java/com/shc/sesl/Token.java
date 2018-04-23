@@ -13,7 +13,7 @@ public class Token
     final int line;
     final int column;
 
-    Token(TokenType type, String lexeme, Object literal, int line, int column)
+    public Token(TokenType type, String lexeme, Object literal, int line, int column)
     {
         this.type = type;
         this.lexeme = lexeme;

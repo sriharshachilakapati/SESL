@@ -5,16 +5,16 @@ import static com.shc.sesl.TokenType.*;
 /**
  * @author Sri Harsha Chilakapati
  */
-class ExprParser
+public class ExprParser
 {
     private final Parser parser;
 
-    ExprParser(Parser parser)
+    public ExprParser(Parser parser)
     {
         this.parser = parser;
     }
 
-    Expr parse()
+    public Expr parse()
     {
         // expression = assignment ;
         return parseAssignment();
