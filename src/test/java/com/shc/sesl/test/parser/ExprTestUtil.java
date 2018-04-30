@@ -36,6 +36,11 @@ class ExprTestUtil
         put(GREATER, ">");
         put(LESSER_EQUALS, "<=");
         put(GREATER_EQUALS, ">=");
+        put(LOGICAL_OR_EQUALS, "||=");
+        put(LOGICAL_AND_EQUALS, "&&=");
+        put(INCREMENT, "++");
+        put(DECREMENT, "--");
+        put(NOT, "!");
     }};
     
     /**

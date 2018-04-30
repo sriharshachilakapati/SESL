@@ -96,6 +96,30 @@ public class ExpressionTest
     }
 
     @Test
+    public void testVariableInVariable()
+    {
+        final String source = "a.b;";
+        final Expr correct = new Expr.Variable(
+                createIdentifierToken("b"),
+                new Expr.Variable(createIdentifierToken("a")));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testVariableInVariableInExpression()
+    {
+        final String source = "a.b + 20;";
+        final Expr correct = new Expr.Binary(
+                new Expr.Variable(createIdentifierToken("b"),
+                        new Expr.Variable(createIdentifierToken("a"))),
+                createOperatorToken(TokenType.PLUS),
+                new Expr.Literal(20));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
     public void testCustomGroupingInExpression()
     {
         final String source = "3 * (2 + 2);";
@@ -178,6 +202,36 @@ public class ExpressionTest
         final Expr correct = new Expr.Assign(
                 new Expr.Variable(createIdentifierToken("a")),
                 createOperatorToken(TokenType.SLASH_EQUALS),
+                new Expr.Binary(
+                        new Expr.Literal(3),
+                        createOperatorToken(TokenType.PLUS),
+                        new Expr.Literal(5)));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testOrAssignmentInExpression()
+    {
+        final String source = "a ||= 3 + 5;";
+        final Expr correct = new Expr.Assign(
+                new Expr.Variable(createIdentifierToken("a")),
+                createOperatorToken(TokenType.LOGICAL_OR_EQUALS),
+                new Expr.Binary(
+                        new Expr.Literal(3),
+                        createOperatorToken(TokenType.PLUS),
+                        new Expr.Literal(5)));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testAndAssignmentInExpression()
+    {
+        final String source = "a &&= 3 + 5;";
+        final Expr correct = new Expr.Assign(
+                new Expr.Variable(createIdentifierToken("a")),
+                createOperatorToken(TokenType.LOGICAL_AND_EQUALS),
                 new Expr.Binary(
                         new Expr.Literal(3),
                         createOperatorToken(TokenType.PLUS),
@@ -272,6 +326,88 @@ public class ExpressionTest
                         new Expr.Literal(3),
                         createOperatorToken(TokenType.PLUS),
                         new Expr.Variable(createIdentifierToken("b"))));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testPreIncrementOperatorInExpression()
+    {
+        final String source = "++a * 30;";
+        final Expr correct = new Expr.Binary(
+                new Expr.PreUnary(createOperatorToken(TokenType.INCREMENT),
+                        new Expr.Variable(createIdentifierToken("a"))),
+                createOperatorToken(TokenType.STAR),
+                new Expr.Literal(30));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testPreDecrementOperatorInExpression()
+    {
+        final String source = "--a * 30;";
+        final Expr correct = new Expr.Binary(
+                new Expr.PreUnary(createOperatorToken(TokenType.DECREMENT),
+                        new Expr.Variable(createIdentifierToken("a"))),
+                createOperatorToken(TokenType.STAR),
+                new Expr.Literal(30));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testPostIncrementOperatorInExpression()
+    {
+        final String source = "a++ * 30;";
+        final Expr correct = new Expr.Binary(
+                new Expr.PostUnary(new Expr.Variable(createIdentifierToken("a")),
+                        createOperatorToken(TokenType.INCREMENT)),
+                createOperatorToken(TokenType.STAR),
+                new Expr.Literal(30));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testPostDecrementOperatorInExpression()
+    {
+        final String source = "a-- * 30;";
+        final Expr correct = new Expr.Binary(
+                new Expr.PostUnary(new Expr.Variable(createIdentifierToken("a")),
+                        createOperatorToken(TokenType.DECREMENT)),
+                createOperatorToken(TokenType.STAR),
+                new Expr.Literal(30));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testNotOperatorInExpression()
+    {
+        final String source = "false == !true;";
+        final Expr correct = new Expr.Binary(
+                new Expr.Literal(false),
+                createOperatorToken(TokenType.EQUALS),
+                new Expr.PreUnary(createOperatorToken(TokenType.NOT),
+                        new Expr.Literal(true)));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testUnaryMinusOperatorInExpression()
+    {
+        final String source = "3 + 2 + (-3);";
+        final Expr correct = new Expr.Binary(
+                new Expr.Binary(
+                        new Expr.Literal(3),
+                        createOperatorToken(TokenType.PLUS),
+                        new Expr.Literal(2)),
+                createOperatorToken(TokenType.PLUS),
+                new Expr.Grouping(
+                        new Expr.PreUnary(createOperatorToken(TokenType.MINUS),
+                                new Expr.Literal(3))));
 
         assertExpr(source, correct);
     }
