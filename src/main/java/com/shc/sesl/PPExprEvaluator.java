@@ -1,30 +1,32 @@
 package com.shc.sesl;
 
+import com.shc.sesl.ast.expr.*;
+
 class PPExprEvaluator
 {
     static Object evaluate(Expr expr)
     {
-        while (expr instanceof Expr.Grouping)
-            expr = ((Expr.Grouping) expr).expression;
+        while (expr instanceof Grouping)
+            expr = ((Grouping) expr).expression;
 
-        if (expr instanceof Expr.Literal)
-            return evaluate((Expr.Literal) expr);
+        if (expr instanceof Literal)
+            return evaluate((Literal) expr);
 
-        if (expr instanceof Expr.PreUnary)
-            return evaluate((Expr.PreUnary) expr);
+        if (expr instanceof PreUnary)
+            return evaluate((PreUnary) expr);
 
-        if (expr instanceof Expr.Binary)
-            return evaluate((Expr.Binary) expr);
+        if (expr instanceof Binary)
+            return evaluate((Binary) expr);
 
         return null;
     }
 
-    private static Object evaluate(Expr.Literal expr)
+    private static Object evaluate(Literal expr)
     {
         return expr.value;
     }
 
-    private static Object evaluate(Expr.PreUnary expr)
+    private static Object evaluate(PreUnary expr)
     {
         Object right = evaluate(expr.right);
 
@@ -43,7 +45,7 @@ class PPExprEvaluator
         return null;
     }
 
-    private static Object evaluate(Expr.Binary expr)
+    private static Object evaluate(Binary expr)
     {
         Object left = evaluate(expr.left);
         Object right = evaluate(expr.right);

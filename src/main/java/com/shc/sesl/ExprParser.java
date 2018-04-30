@@ -1,5 +1,7 @@
 package com.shc.sesl;
 
+import com.shc.sesl.ast.expr.*;
+
 import static com.shc.sesl.TokenType.*;
 
 /**
@@ -32,8 +34,8 @@ public class ExprParser
             Token operator = parser.previous();
             Expr value = parseAssignment();
 
-            if (expr instanceof Expr.Variable)
-                return new Expr.Assign((Expr.Variable) expr, operator, value);
+            if (expr instanceof Variable)
+                return new Assign((Variable) expr, operator, value);
 
             throw Parser.error(operator, "Invalid assignment target.");
         }
@@ -50,7 +52,7 @@ public class ExprParser
         {
             Token operator = parser.previous();
             Expr right = parseAnd();
-            expr = new Expr.Logical(expr, operator, right);
+            expr = new Logical(expr, operator, right);
         }
 
         return expr;
@@ -65,7 +67,7 @@ public class ExprParser
         {
             Token operator = parser.previous();
             Expr right = parseEquality();
-            expr = new Expr.Logical(expr, operator, right);
+            expr = new Logical(expr, operator, right);
         }
 
         return expr;
@@ -80,7 +82,7 @@ public class ExprParser
         {
             Token operator = parser.previous();
             Expr right = parseComparison();
-            expr = new Expr.Binary(expr, operator, right);
+            expr = new Binary(expr, operator, right);
         }
 
         return expr;
@@ -95,7 +97,7 @@ public class ExprParser
         {
             Token operator = parser.previous();
             Expr right = parseTerm();
-            expr = new Expr.Binary(expr, operator, right);
+            expr = new Binary(expr, operator, right);
         }
 
         return expr;
@@ -110,7 +112,7 @@ public class ExprParser
         {
             Token operator = parser.previous();
             Expr right = parseFactor();
-            expr = new Expr.Binary(expr, operator, right);
+            expr = new Binary(expr, operator, right);
         }
 
         return expr;
@@ -125,7 +127,7 @@ public class ExprParser
         {
             Token operator = parser.previous();
             Expr right = parseUnary();
-            expr = new Expr.Binary(expr, operator, right);
+            expr = new Binary(expr, operator, right);
         }
 
         return expr;
@@ -140,7 +142,7 @@ public class ExprParser
         {
             Token operator = parser.previous();
             Expr right = parseUnary();
-            return new Expr.PreUnary(operator, right);
+            return new PreUnary(operator, right);
         }
 
         if (parser.match(INCREMENT, DECREMENT))
@@ -148,8 +150,8 @@ public class ExprParser
             Token operator = parser.previous();
             Expr right = parsePrimary();
 
-            if (right instanceof Expr.Variable)
-                return new Expr.PreUnary(operator, right);
+            if (right instanceof Variable)
+                return new PreUnary(operator, right);
 
             throw Parser.error(parser.peek(), "Expect a variable.");
         }
@@ -163,20 +165,20 @@ public class ExprParser
         //         | variable ( "++" | "--" )?
         //         | "(" expression ")" ;
         if (parser.match(INTEGER_VALUE, FLOAT_VALUE))
-            return new Expr.Literal(parser.previous().literal);
+            return new Literal(parser.previous().literal);
 
         if (parser.match(FALSE))
-            return new Expr.Literal(false);
+            return new Literal(false);
 
         if (parser.match(TRUE))
-            return new Expr.Literal(true);
+            return new Literal(true);
 
         if (parser.match(IDENTIFIER))
         {
             Expr variable = parseVariable();
 
             if (parser.match(INCREMENT, DECREMENT))
-                return new Expr.PostUnary(variable, parser.previous());
+                return new PostUnary(variable, parser.previous());
 
             return variable;
         }
@@ -185,7 +187,7 @@ public class ExprParser
         {
             Expr expr = parse();
             parser.consume(RIGHT_PAREN, "Expect ')' after expression.");
-            return new Expr.Grouping(expr);
+            return new Grouping(expr);
         }
 
         throw Parser.error(parser.peek(), "Expect an expression.");
@@ -194,12 +196,12 @@ public class ExprParser
     private Expr parseVariable()
     {
         // variable = IDENTIFIER ( "." IDENTIFIER )* ;
-        Expr variable = new Expr.Variable(parser.previous());
+        Expr variable = new Variable(parser.previous());
 
         while (parser.match(DOT))
         {
             if (parser.match(IDENTIFIER))
-                variable = new Expr.Variable(parser.previous(), (Expr.Variable) variable);
+                variable = new Variable(parser.previous(), (Variable) variable);
             else
                 throw Parser.error(parser.peek(), "Expected a variable.");
         }

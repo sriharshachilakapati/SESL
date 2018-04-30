@@ -1,5 +1,9 @@
 package com.shc.sesl;
 
+import com.shc.sesl.ast.expr.Expr;
+import com.shc.sesl.ast.stmt.Expression;
+import com.shc.sesl.ast.stmt.Stmt;
+
 import static com.shc.sesl.TokenType.SEMICOLON;
 
 /**
@@ -25,7 +29,7 @@ class StmtParser
         // expression_stmt = expression ";" ;
         Expr expr = parser.parseExpression();
         parser.consume(SEMICOLON, "Expect ';' after expression.");
-        return new Stmt.Expression(expr);
+        return new Expression(expr);
     }
 
 

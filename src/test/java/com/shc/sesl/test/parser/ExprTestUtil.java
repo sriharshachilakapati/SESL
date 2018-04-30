@@ -1,6 +1,6 @@
 package com.shc.sesl.test.parser;
 
-import com.shc.sesl.Expr;
+import com.shc.sesl.ast.expr.Expr;
 import com.shc.sesl.ExprParser;
 import com.shc.sesl.Parser;
 import com.shc.sesl.Scanner;
