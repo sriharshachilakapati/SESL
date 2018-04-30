@@ -26,7 +26,7 @@ class ExprTestUtil
     {
         ExprParser parser = new ExprParser(new Parser(new Scanner(input).scanTokens()));
         Expr expr = parser.parse();
-        assertEquals(expr.toString(), correct.toString());
+        assertEquals(correct.toString(), expr.toString());
     }
 
     /**
@@ -65,6 +65,9 @@ class ExprTestUtil
                 break;
             case SLASH_EQUALS:
                 lexeme = "/=";
+                break;
+            case EQUAL_TO:
+                lexeme = "=";
                 break;
         }
 
