@@ -125,4 +125,64 @@ public class ExpressionTest
 
         assertExpr(source, correct);
     }
+
+    @Test
+    public void testAdditiveAssignmentInExpression()
+    {
+        final String source = "a += 3 + 5;";
+        final Expr correct = new Expr.Assign(
+                new Expr.Variable(createIdentifierToken("a")),
+                createOperatorToken(TokenType.PLUS_EQUALS),
+                new Expr.Binary(
+                        new Expr.Literal(3),
+                        createOperatorToken(TokenType.PLUS),
+                        new Expr.Literal(5)));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testSubtractiveAssignmentInExpression()
+    {
+        final String source = "a -= 3 + 5;";
+        final Expr correct = new Expr.Assign(
+                new Expr.Variable(createIdentifierToken("a")),
+                createOperatorToken(TokenType.MINUS_EQUALS),
+                new Expr.Binary(
+                        new Expr.Literal(3),
+                        createOperatorToken(TokenType.PLUS),
+                        new Expr.Literal(5)));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testMultiplicativeAssignmentInExpression()
+    {
+        final String source = "a *= 3 + 5;";
+        final Expr correct = new Expr.Assign(
+                new Expr.Variable(createIdentifierToken("a")),
+                createOperatorToken(TokenType.STAR_EQUALS),
+                new Expr.Binary(
+                        new Expr.Literal(3),
+                        createOperatorToken(TokenType.PLUS),
+                        new Expr.Literal(5)));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testDivisiveAssignmentInExpression()
+    {
+        final String source = "a /= 3 + 5;";
+        final Expr correct = new Expr.Assign(
+                new Expr.Variable(createIdentifierToken("a")),
+                createOperatorToken(TokenType.SLASH_EQUALS),
+                new Expr.Binary(
+                        new Expr.Literal(3),
+                        createOperatorToken(TokenType.PLUS),
+                        new Expr.Literal(5)));
+
+        assertExpr(source, correct);
+    }
 }
