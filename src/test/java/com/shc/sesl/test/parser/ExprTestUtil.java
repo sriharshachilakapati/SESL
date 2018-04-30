@@ -70,4 +70,15 @@ class ExprTestUtil
 
         return new Token(operator, lexeme, null, 0, 0);
     }
+
+    /**
+     * Utility function to create an identifier token.
+     *
+     * @param name The name of the identifier.
+     * @return The identifier token.
+     */
+    static Token createIdentifierToken(String name)
+    {
+        return new Token(TokenType.IDENTIFIER, name, name, 0, 0);
+    }
 }

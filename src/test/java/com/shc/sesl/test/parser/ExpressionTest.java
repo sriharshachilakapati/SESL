@@ -58,4 +58,56 @@ public class ExpressionTest
 
         assertExpr(source, correct);
     }
+
+    @Test
+    public void testComplexExpression()
+    {
+        final String source = "4 / 2 * 3 + 2 * 4;";
+        final Expr correct = new Expr.Binary(
+                new Expr.Binary(
+                        new Expr.Binary(
+                                new Expr.Literal(4),
+                                createOperatorToken(TokenType.SLASH),
+                                new Expr.Literal(2)),
+                        createOperatorToken(TokenType.STAR),
+                        new Expr.Literal(3)),
+                createOperatorToken(TokenType.PLUS),
+                new Expr.Binary(
+                        new Expr.Literal(2),
+                        createOperatorToken(TokenType.STAR),
+                        new Expr.Literal(4)));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testVariableInExpression()
+    {
+        final String source = "3 * pi * r;";
+        final Expr correct = new Expr.Binary(
+                new Expr.Binary(
+                        new Expr.Literal(3),
+                        createOperatorToken(TokenType.STAR),
+                        new Expr.Variable(createIdentifierToken("pi"))),
+                createOperatorToken(TokenType.STAR),
+                new Expr.Variable(createIdentifierToken("r")));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testCustomGroupingInExpression()
+    {
+        final String source = "3 * (2 + 2);";
+        final Expr correct = new Expr.Binary(
+                new Expr.Literal(3),
+                createOperatorToken(TokenType.STAR),
+                new Expr.Grouping(
+                        new Expr.Binary(
+                                new Expr.Literal(2),
+                                createOperatorToken(TokenType.PLUS),
+                                new Expr.Literal(2))));
+
+        assertExpr(source, correct);
+    }
 }
