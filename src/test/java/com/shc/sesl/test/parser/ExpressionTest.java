@@ -185,4 +185,94 @@ public class ExpressionTest
 
         assertExpr(source, correct);
     }
+
+    @Test
+    public void testEqualsComparison()
+    {
+        final String source = "a == 3 + b";
+        final Expr correct = new Expr.Binary(
+                new Expr.Variable(createIdentifierToken("a")),
+                createOperatorToken(TokenType.EQUALS),
+                new Expr.Binary(
+                        new Expr.Literal(3),
+                        createOperatorToken(TokenType.PLUS),
+                        new Expr.Variable(createIdentifierToken("b"))));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testNotEqualsComparison()
+    {
+        final String source = "a != 3 + b";
+        final Expr correct = new Expr.Binary(
+                new Expr.Variable(createIdentifierToken("a")),
+                createOperatorToken(TokenType.NOT_EQUALS),
+                new Expr.Binary(
+                        new Expr.Literal(3),
+                        createOperatorToken(TokenType.PLUS),
+                        new Expr.Variable(createIdentifierToken("b"))));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testLesserThanComparison()
+    {
+        final String source = "a < 3 + b";
+        final Expr correct = new Expr.Binary(
+                new Expr.Variable(createIdentifierToken("a")),
+                createOperatorToken(TokenType.LESSER),
+                new Expr.Binary(
+                        new Expr.Literal(3),
+                        createOperatorToken(TokenType.PLUS),
+                        new Expr.Variable(createIdentifierToken("b"))));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testGreaterThanComparison()
+    {
+        final String source = "a > 3 + b";
+        final Expr correct = new Expr.Binary(
+                new Expr.Variable(createIdentifierToken("a")),
+                createOperatorToken(TokenType.GREATER),
+                new Expr.Binary(
+                        new Expr.Literal(3),
+                        createOperatorToken(TokenType.PLUS),
+                        new Expr.Variable(createIdentifierToken("b"))));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testLesserThanOrEqualsComparison()
+    {
+        final String source = "a <= 3 + b";
+        final Expr correct = new Expr.Binary(
+                new Expr.Variable(createIdentifierToken("a")),
+                createOperatorToken(TokenType.LESSER_EQUALS),
+                new Expr.Binary(
+                        new Expr.Literal(3),
+                        createOperatorToken(TokenType.PLUS),
+                        new Expr.Variable(createIdentifierToken("b"))));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testGreaterOrEqualsThanComparison()
+    {
+        final String source = "a >= 3 + b";
+        final Expr correct = new Expr.Binary(
+                new Expr.Variable(createIdentifierToken("a")),
+                createOperatorToken(TokenType.GREATER_EQUALS),
+                new Expr.Binary(
+                        new Expr.Literal(3),
+                        createOperatorToken(TokenType.PLUS),
+                        new Expr.Variable(createIdentifierToken("b"))));
+
+        assertExpr(source, correct);
+    }
 }

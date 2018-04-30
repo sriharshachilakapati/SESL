@@ -69,6 +69,24 @@ class ExprTestUtil
             case EQUAL_TO:
                 lexeme = "=";
                 break;
+            case EQUALS:
+                lexeme = "==";
+                break;
+            case NOT_EQUALS:
+                lexeme = "!=";
+                break;
+            case LESSER:
+                lexeme = "<";
+                break;
+            case GREATER:
+                lexeme = ">";
+                break;
+            case LESSER_EQUALS:
+                lexeme = "<=";
+                break;
+            case GREATER_EQUALS:
+                lexeme = ">=";
+                break;
         }
 
         return new Token(operator, lexeme, null, 0, 0);
