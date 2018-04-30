@@ -7,6 +7,10 @@ import com.shc.sesl.Scanner;
 import com.shc.sesl.Token;
 import com.shc.sesl.TokenType;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.shc.sesl.TokenType.*;
 import static org.junit.Assert.*;
 
 /**
@@ -16,6 +20,24 @@ import static org.junit.Assert.*;
  */
 class ExprTestUtil
 {
+    private static final Map<TokenType, String> OPERATOR_LEXEMES = new HashMap<TokenType, String>() {{
+        put(PLUS, "+");
+        put(MINUS, "-");
+        put(STAR, "*");
+        put(SLASH, "/");
+        put(PLUS_EQUALS, "+=");
+        put(MINUS_EQUALS, "-=");
+        put(STAR_EQUALS, "*=");
+        put(SLASH_EQUALS, "/=");
+        put(EQUAL_TO, "=");
+        put(EQUALS, "==");
+        put(NOT_EQUALS, "!=");
+        put(LESSER, "<");
+        put(GREATER, ">");
+        put(LESSER_EQUALS, "<=");
+        put(GREATER_EQUALS, ">=");
+    }};
+    
     /**
      * Assert whether a given input string produces a given expression.
      *
@@ -38,58 +60,7 @@ class ExprTestUtil
      */
     static Token createOperatorToken(TokenType operator)
     {
-        String lexeme = null;
-
-        switch (operator)
-        {
-            case PLUS:
-                lexeme = "+";
-                break;
-            case MINUS:
-                lexeme = "-";
-                break;
-            case STAR:
-                lexeme = "*";
-                break;
-            case SLASH:
-                lexeme = "/";
-                break;
-            case PLUS_EQUALS:
-                lexeme = "+=";
-                break;
-            case MINUS_EQUALS:
-                lexeme = "-=";
-                break;
-            case STAR_EQUALS:
-                lexeme = "*=";
-                break;
-            case SLASH_EQUALS:
-                lexeme = "/=";
-                break;
-            case EQUAL_TO:
-                lexeme = "=";
-                break;
-            case EQUALS:
-                lexeme = "==";
-                break;
-            case NOT_EQUALS:
-                lexeme = "!=";
-                break;
-            case LESSER:
-                lexeme = "<";
-                break;
-            case GREATER:
-                lexeme = ">";
-                break;
-            case LESSER_EQUALS:
-                lexeme = "<=";
-                break;
-            case GREATER_EQUALS:
-                lexeme = ">=";
-                break;
-        }
-
-        return new Token(operator, lexeme, null, 0, 0);
+        return new Token(operator, OPERATOR_LEXEMES.get(operator), null, 0, 0);
     }
 
     /**
