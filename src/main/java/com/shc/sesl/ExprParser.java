@@ -2,6 +2,9 @@ package com.shc.sesl;
 
 import com.shc.sesl.ast.expr.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.shc.sesl.TokenType.*;
 
 /**
@@ -163,6 +166,7 @@ public class ExprParser
     {
         // primary = INTEGER_VALUE | FLOAT_VALUE | "false" | "true"
         //         | variable ( "++" | "--" )?
+        //         | variable "(" arguments? ")"
         //         | "(" expression ")" ;
         if (parser.match(INTEGER_VALUE, FLOAT_VALUE))
             return new Literal(parser.previous().literal);
@@ -180,6 +184,9 @@ public class ExprParser
             if (parser.match(INCREMENT, DECREMENT))
                 return new PostUnary(variable, parser.previous());
 
+            if (parser.match(LEFT_PAREN))
+                return new Call((Variable) variable, parseFunctionCallArguments());
+
             return variable;
         }
 
@@ -191,6 +198,20 @@ public class ExprParser
         }
 
         throw Parser.error(parser.peek(), "Expect an expression.");
+    }
+
+    private List<Expr> parseFunctionCallArguments()
+    {
+        // arguments = expression ("," expression)* ;
+        List<Expr> arguments = new ArrayList<>();
+
+        if (parser.match(RIGHT_PAREN))
+            return arguments;
+
+        do arguments.add(parse()); while (parser.match(COMMA));
+
+        parser.consume(RIGHT_PAREN, "Expect ')' after argument list.");
+        return arguments;
     }
 
     private Expr parseVariable()

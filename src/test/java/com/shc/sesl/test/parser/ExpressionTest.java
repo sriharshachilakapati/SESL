@@ -1,8 +1,10 @@
 package com.shc.sesl.test.parser;
 
-import com.shc.sesl.ast.expr.*;
 import com.shc.sesl.TokenType;
+import com.shc.sesl.ast.expr.*;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 import static com.shc.sesl.test.parser.ExprTestUtil.*;
 
@@ -408,6 +410,88 @@ public class ExpressionTest
                 new Grouping(
                         new PreUnary(createOperatorToken(TokenType.MINUS),
                                 new Literal(3))));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testFunctionCallWithoutArguments()
+    {
+        final String source = "foo();";
+        final Expr correct = new Call(new Variable(createIdentifierToken("foo")));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testFunctionCallWithArguments()
+    {
+        final String source = "foo(2, false, 3.14);";
+        final Expr correct = new Call(new Variable(createIdentifierToken("foo")), Arrays.asList(
+                new Literal(2),
+                new Literal(false),
+                new Literal(3.14)));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testFunctionCallWithExpressionInArguments()
+    {
+        final String source = "foo(2, 3 + 2, false, 4 * 3);";
+        final Expr correct = new Call(new Variable(createIdentifierToken("foo")), Arrays.asList(
+                new Literal(2),
+                new Binary(
+                        new Literal(3),
+                        createOperatorToken(TokenType.PLUS),
+                        new Literal(2)),
+                new Literal(false),
+                new Binary(
+                        new Literal(4),
+                        createOperatorToken(TokenType.STAR),
+                        new Literal(3))));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testFunctionCallWithoutArgsInMemberOfVariable()
+    {
+        final String source = "foo.bar();";
+        final Expr correct = new Call(new Variable(createIdentifierToken("bar"),
+                new Variable(createIdentifierToken("foo"))));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testFunctionCallWithinExpression()
+    {
+        final String source = "1 * foo() + 2;";
+        final Expr correct = new Binary(
+                new Binary(
+                        new Literal(1),
+                        createOperatorToken(TokenType.STAR),
+                        new Call(new Variable(createIdentifierToken("foo")))),
+                createOperatorToken(TokenType.PLUS),
+                new Literal(2));
+
+        assertExpr(source, correct);
+    }
+
+    @Test
+    public void testFunctionCallWithArgsWithinExpression()
+    {
+        final String source = "1 * (foo(3, 2) + 2);";
+        final Expr correct = new Binary(
+                new Literal(1),
+                createOperatorToken(TokenType.STAR),
+                new Grouping(new Binary(
+                        new Call(new Variable(createIdentifierToken("foo")), Arrays.asList(
+                                new Literal(3),
+                                new Literal(2))),
+                        createOperatorToken(TokenType.PLUS),
+                        new Literal(2))));
 
         assertExpr(source, correct);
     }
