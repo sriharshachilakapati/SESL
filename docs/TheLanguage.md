@@ -228,4 +228,17 @@ int d = 0b101101; // Binary
 
 SESL doesn't make any guarantees on the integer overflow, as they are dependent on the hardware. However you can be fine until the integer doesn't exceed the 16-bit precision.
 
+#### 4.1.4. Floats
+
+SESL language also supports floating point arithmetic, which is used for most scalar operations. They are declared and used as follows:
+
+~~~sesl
+float pi = 3.14;
+~~~
+
+Unlike languages like Java, the `f` suffix is not used here. Using it will result in a compiler error. The floats are expected to follow the IEEE single precision floating-point definition for precision and dynamic range, but are not guaranteed because of the large diversities among the GLSL versions it supports.
+
+SESL doesn't yet support the exponential notation for the floats because it is least used, but it is planned to be implemented in a future release of the language transpiler. Similar to GLSL, a leading unary minus sign **\( - \)** is interpreted as a unary operator and not part of the literal itself.
+
 TODO: Complete writing the spec
+
